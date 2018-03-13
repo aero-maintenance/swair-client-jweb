@@ -11,7 +11,7 @@ public class utilisateur {
 	private String ville;
 	private String code_postale;
 	private String password;
-	private String username;
+	private String email;
 	
 	public void setnom_aeroclub(String nom_aeroclub) {
 		this.nom_aeroclub = nom_aeroclub;
@@ -49,12 +49,10 @@ public class utilisateur {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public String getUsername() {
-		return username;
+	public String getEmail() {
+		return email;
 	}
-	public void setUsername(String username) {
-		this.username = username;
+	public void setEmail(String email) {
+		this.email = email;
 	}
-	
-
 }
