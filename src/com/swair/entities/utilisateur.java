@@ -1,17 +1,23 @@
 package com.swair.entities;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
 public class utilisateur {
 	
-	private String nom_aeroclub;
+	@Id
+	@GeneratedValue( strategy = GenerationType.IDENTITY )
 	private int user_id;
+	private String nom_aeroclub;
 	private String adresse;
 	private String ville;
 	private String code_postale;
 	private String password;
 	private String email;
+	
 	
 	public void setnom_aeroclub(String nom_aeroclub) {
 		this.nom_aeroclub = nom_aeroclub;

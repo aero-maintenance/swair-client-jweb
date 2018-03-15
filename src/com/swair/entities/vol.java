@@ -1,6 +1,9 @@
 package com.swair.entities;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 import org.joda.time.DateTime;
 
@@ -8,6 +11,8 @@ import org.joda.time.DateTime;
 
 public class vol {
 	
+	@Id
+	@GeneratedValue( strategy = GenerationType.IDENTITY )
 	private int id_vol;
 	private int ac_id;
 	private DateTime date_heure;

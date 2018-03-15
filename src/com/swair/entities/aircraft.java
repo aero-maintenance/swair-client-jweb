@@ -3,10 +3,14 @@ package com.swair.entities;
 import java.sql.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
 public class aircraft {
-	
+	@Id
+	@GeneratedValue( strategy = GenerationType.IDENTITY )
 	private int ac_id;
 	private int user_id;
 	private String modele;
