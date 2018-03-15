@@ -1,11 +1,17 @@
 package com.swair.entities;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
 public class utilisateur {
 	
+	
 	private String nom_aeroclub;
+	@Id
+	@GeneratedValue( strategy = GenerationType.IDENTITY)
 	private int user_id;
 	private String adresse;
 	private String ville;

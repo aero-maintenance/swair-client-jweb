@@ -1,6 +1,11 @@
 package com.swair.entities;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import org.joda.time.DateTime;
 
@@ -8,12 +13,19 @@ import org.joda.time.DateTime;
 
 public class vol {
 	
+	@Id
+	@GeneratedValue( strategy = GenerationType.IDENTITY)
 	private int id_vol;
+	@ManyToOne
+    @JoinColumn( name = "id_client" )
 	private int ac_id;
 	private DateTime date_heure;
 	private float FH;
 	private int FC;
 	private String remarque;
+	private int huile;
+	private int carburant;
+	
 	public int getId_vol() {
 		return id_vol;
 	}
@@ -49,6 +61,18 @@ public class vol {
 	}
 	public void setRemarque(String remarque) {
 		this.remarque = remarque;
+	}
+	public int getHuile() {
+		return huile;
+	}
+	public void setHuile(int huile) {
+		this.huile = huile;
+	}
+	public int getCarburant() {
+		return carburant;
+	}
+	public void setCarburant(int carburant) {
+		this.carburant = carburant;
 	}
 	
 
