@@ -3,9 +3,14 @@
  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:schemaLocation="http://java.sun.com/xml/ns/persistence 
  http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
-    <persistence-unit name="bdd_sdzee_PU" transaction-type="JTA">
-        <jta-data-source>jdbc/bonecp_resource</jta-data-source>
-        <class>com.sdzee.entities.Utilisateur</class>
-        <properties/>		
-    </persistence-unit>   
+  	<persistence-unit name="softwair" transaction-type="JTA">
+  		<jta-data-source>jdbc/bonecp_resource_tp</jta-data-source>
+		<class>com.swair.entities.utilisateur</class>
+		<class>com.swair.entities.aircraft</class>
+		<class>com.swair.entities.vol</class>
+		<properties>
+            <property name="eclipselink.logging.level.sql" value="FINE"/>
+            <property name="eclipselink.logging.parameters" value="true"/>
+        </properties>		
+	</persistence-unit>   
 </persistence>

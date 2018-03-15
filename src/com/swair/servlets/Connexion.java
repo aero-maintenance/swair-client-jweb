@@ -34,7 +34,8 @@ public class Connexion extends HttpServlet {
     public static final String ATT_SESSION_USER 			= "sessionUtilisateur";
     public static final String COOKIE_DERNIERE_CONNEXION 	= "derniereConnexion";
     public static final String FORMAT_DATE               	= "dd/MM/yyyy HH:mm:ss";
-    public static final String VUE              			= "/WEB-INF/connexion.jsp";
+    public static final String VUE_CONNEXION              	= "/WEB-INF/connexion.jsp";
+    public static final String VUE_ACCUEIL					= "/WEB-INF/accueil_aeroclub.jsp.";
     public static final String CHAMP_MEMOIRE             	= "memoire";
     public static final int    COOKIE_MAX_AGE            	= 60 * 60 * 24 * 365;  // 1 an
     
@@ -66,7 +67,7 @@ public class Connexion extends HttpServlet {
             request.setAttribute( ATT_INTERVALLE_CONNEXIONS, intervalleConnexions );
         }
         /* Affichage de la page de connexion */
-        this.getServletContext().getRequestDispatcher( VUE ).forward( request, response );
+        this.getServletContext().getRequestDispatcher( VUE_CONNEXION ).forward( request, response );
     }
 
     public void doPost( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
@@ -107,7 +108,7 @@ public class Connexion extends HttpServlet {
         request.setAttribute( ATT_FORM, form );
         request.setAttribute( ATT_USER, utilisateur );
 
-        this.getServletContext().getRequestDispatcher( VUE ).forward( request, response );
+        this.getServletContext().getRequestDispatcher( VUE_ACCUEIL ).forward( request, response );
     }
     
     private static String getCookieValue( HttpServletRequest request, String nom ) {
