@@ -15,6 +15,7 @@ public class aircraft {
 	@Id
 	@GeneratedValue( strategy = GenerationType.IDENTITY)
 	private int ac_id;
+	
 	@ManyToOne
     @JoinColumn( name = "id_client" )
 	private int user_id;

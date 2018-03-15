@@ -19,6 +19,7 @@ public class vol {
 	@ManyToOne
     @JoinColumn( name = "id_client" )
 	private int ac_id;
+	
 	private DateTime date_heure;
 	private float FH;
 	private int FC;
