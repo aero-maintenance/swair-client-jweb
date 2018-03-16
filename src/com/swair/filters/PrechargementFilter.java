@@ -51,9 +51,9 @@ public class PrechargementFilter implements Filter {
              * Récupération de la liste des clients existants, et enregistrement
              * en session
              */
-            List<utilisateur> listeClients = utilisateurDao.lister();
+            List<utilisateur> listeUtilisateurs = utilisateurDao.lister();
             Map<Long, utilisateur> mapClients = new HashMap<Long, utilisateur>();
-            for ( utilisateur utilisateur : listeClients ) {
+            for ( utilisateur utilisateur : listeUtilisateurs ) {
                 mapClients.put( utilisateur.getUser_id(), utilisateur );
             }
             session.setAttribute( ATT_SESSION_CLIENTS, mapClients );
@@ -67,9 +67,9 @@ public class PrechargementFilter implements Filter {
              * Récupération de la liste des commandes existantes, et
              * enregistrement en session
              */
-            List<vol> listeCommandes = volDao.lister();
+            List<vol> listeVol = volDao.lister();
             Map<Long, vol> mapCommandes = new HashMap<Long, vol>();
-            for ( vol vol : listeCommandes ) {
+            for ( vol vol : listeVol ) {
                 mapCommandes.put( vol.getId_vol(), vol );
             }
             session.setAttribute( ATT_SESSION_COMMANDES, mapCommandes );
