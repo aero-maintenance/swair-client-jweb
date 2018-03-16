@@ -14,9 +14,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
 
-import com.sdzee.tp.entities.Client;
-import com.sdzee.tp.forms.DAOException;
-import com.sdzee.tp.forms.FormValidationException;
+import org.joda.time.DateTime;
+
+import com.swair.dao.DAOException;
 import com.swair.dao.VolDAO;
 import com.swair.entities.vol;
 
@@ -30,6 +30,11 @@ public class CreationVolForm {
 	    private static final String CHAMP_REMARQUE      = "Remarque";
 	    private static final String CHAMP_HUILE   		= "Ajout_Huile";
 	    private static final String CHAMP_CARBURANT 	= "Ajout_Carburant";
+	    private static final String CHAMP_YEAR 			= "Année";
+	    private static final String CHAMP_MONTH			= "Mois";
+	    private static final String CHAMP_DAY 			= "Jour";
+	    private static final String CHAMP_HOUR 			= "Heure";
+	    private static final String CHAMP_MINUTE 		= "Minute";
 
 	    private String              resultat;
 	    private Map<String, String> erreurs         = new HashMap<String, String>();
@@ -49,23 +54,26 @@ public class CreationVolForm {
 	    
 	    public vol creervol( HttpServletRequest request, String chemin ) {
 	        String Immat_avion = getValeurChamp( request, CHAMP_AVION );
-	        String Date_Heure = getValeurChamp( request, CHAMP_DATEHEURE );
 	        String Flight_Hours = getValeurChamp( request, CHAMP_FH );
 	        String Flight_Cycle = getValeurChamp( request, CHAMP_FC );
 	        String Remarque = getValeurChamp( request, CHAMP_REMARQUE );
 	        String Huile = getValeurChamp( request, CHAMP_HUILE );
 	        String Carburant = getValeurChamp( request, CHAMP_CARBURANT );
+	        String Annee = getValeurChamp( request, CHAMP_YEAR );
+	        String Mois = getValeurChamp( request, CHAMP_MONTH );
+	        String Jour = getValeurChamp( request, CHAMP_DAY );
+	        String Heure = getValeurChamp( request, CHAMP_HOUR );
+	        String Minute = getValeurChamp( request, CHAMP_MINUTE );
 	        
 	        vol vol = new vol();
 
 	        traiterImmat_avion( Immat_avion, vol );
-	        traiterDate_Heure( Date_Heure, vol );
+	        traiterDate_Heure( Annee, Mois, Jour, Heure, Minute, vol );
 	        traiterFlight_Hours( Flight_Hours, vol );
 	        traiterFlight_Cycle( Flight_Cycle, vol );
 	        traiterRemarque( Remarque, vol );
 	        traiterHuile( Huile, vol );
-	        traiterCarburant( Carburant, vol );
-	       
+	        traiterCarburant( Carburant, vol );     
 	        
 	        try {
 	            if ( erreurs.isEmpty() ) {
@@ -84,7 +92,7 @@ public class CreationVolForm {
 	    }
 	    
 	    private void traiterImmat_avion( String Immat_avion, vol vol ) {
-	        try {
+	    		        try {
 	            validationImmat_avion( Immat_avion );
 	        } catch ( FormValidationException e ) {
 	            setErreur( CHAMP_AVION, e.getMessage() );
@@ -92,31 +100,34 @@ public class CreationVolForm {
 	        vol.setAc_id( Immat_avion );  // Récupérer l'ID Avion en fonction de l'immat
 	    }
 	    
-	    private void traiterDate_Heure( String Date_Heure, vol vol ) {
-	        try {
-	            validationDate_Heure( Date_Heure );
-	        } catch ( FormValidationException e ) {
+	    private void traiterDate_Heure( String Annee, String Mois, String Jour, String Heure, String Minute, vol vol ) {
+	    	DateTime valeurDate_Heure = null ; 
+	    	try {
+	    		valeurDate_Heure = validationDate_Heure(  Annee,  Mois,  Jour,  Heure,  Minute );
+	        } 	catch ( FormValidationException e ) {
 	            setErreur( CHAMP_DATEHEURE, e.getMessage() );
 	        }
-	        vol.setDate_heure( Date_Heure);
+	        vol.setDate_heure( valeurDate_Heure);
 	    }
 	    
 	    private void traiterFlight_Hours( String Flight_Hours, vol vol ) {
-	        try {
-	            validationFlight_Hours( Flight_Hours );
+	    	float valeurFlight_Hours = -1 ; 
+	    	try {
+	            valeurFlight_Hours = validationFlight_Hours( Flight_Hours );
 	        } catch ( FormValidationException e ) {
 	            setErreur( CHAMP_FH, e.getMessage() );
 	        }
-	        vol.setFH( Flight_Hours);
+	        vol.setFH( valeurFlight_Hours);
 	    }
 	    
 	    private void traiterFlight_Cycle( String Flight_Cycle, vol vol ) {
-	        try {
-	            validationFlight_Cycle( Flight_Cycle );
+	        int valeurFlight_Cycle = -1;
+	    	try {
+	            valeurFlight_Cycle = validationFlight_Cycle( Flight_Cycle );
 	        } catch ( FormValidationException e ) {
 	            setErreur( CHAMP_FC, e.getMessage() );
 	        }
-	        vol.setFC( Flight_Cycle);
+	        vol.setFC( valeurFlight_Cycle);
 	    }
 	    
 	    private void traiterRemarque( String Remarque, vol vol ) {
@@ -129,28 +140,192 @@ public class CreationVolForm {
 	    }
 	    
 	    private void traiterHuile( String Huile, vol vol ) {
-	        try {
-	            validationHuile( Huile );
+	        int valeurHuile = 0; 
+	    	try {
+	            valeurHuile = validationHuile( Huile );
 	        } catch ( FormValidationException e ) {
 	            setErreur( CHAMP_HUILE, e.getMessage() );
 	        }
-	        vol.setHuile( Huile);
+	        vol.setHuile( valeurHuile);
 	    }
 	    
 	    private void traiterCarburant( String Carburant, vol vol ) {
-	        try {
-	            validationCarburant( Carburant );
+	        int valeurCarburant = 0;
+	    	try {
+	            valeurCarburant = validationCarburant( Carburant );
 	        } catch ( FormValidationException e ) {
 	            setErreur( CHAMP_CARBURANT, e.getMessage() );
 	        }
-	        vol.setCarburant( Carburant);
+	        vol.setCarburant( valeurCarburant);
 	    }
 	    
+	    private void validationImmat_avion( String Immat_avion ) throws FormValidationException {
+	        if ( Immat_avion != null ) {
+	            if ( Immat_avion.length() < 6 ) {
+	                throw new FormValidationException( "L'immatriculation de l'avion doit contenir au moins 6 caractères." );
+	            }
+	        } else {
+	            throw new FormValidationException( "Merci d'entrer l'immatriculation de l'avion." );
+	        }
+	    }
 	    
 
+	    private DateTime validationDate_Heure( String Annee, String Mois, String Jour, String Heure, String Minute ) throws FormValidationException {
+	      
+	    	int year_tmp;
+	    	int month_tmp;
+	    	int day_tmp;
+	    	int hour_tmp;
+	    	int minute_tmp;
+	    	
+	    	if ( Annee != null && Mois != null && Jour != null && Heure != null && Minute != null) {
+	    		
+	    		
+	            if ( Annee.length() < 4 || Mois.length() < 2 || Jour.length() < 2 || Heure.length() < 2 || Minute.length() < 2 ) {
+	                throw new FormValidationException( "Le format ne correspond pas (JJ/MM/AAAA hh:mm)." );
+	            }
+	            try { 
+		    		year_tmp = Integer.parseInt(Annee); 
+		    		month_tmp = Integer.parseInt(Mois); 
+		    		day_tmp = Integer.parseInt(Jour); 
+		    		hour_tmp = Integer.parseInt(Heure); 
+		    		minute_tmp = Integer.parseInt(Minute); 
+		    	}
+		    	
+		    	catch ( NumberFormatException e ) {
+		    		year_tmp = -1; 
+		    		month_tmp = -1; 
+		    		day_tmp = -1; 
+		    		hour_tmp = -1; 
+		    		minute_tmp = -1; 
+		    		throw new FormValidationException ("Merci d'entrer la date et l'heure de votre vol sous le format suivant : JJ/MM/AAAA hh:mm ");
+		    	}
+		    	
+	        } else {
+	        	year_tmp = -1; 
+	    		month_tmp = -1; 
+	    		day_tmp = -1; 
+	    		hour_tmp = -1; 
+	    		minute_tmp = -1; 
+	            throw new FormValidationException( "Merci d'entrer la date et l'heure de votre vol." );
+	        }
+	    	return new DateTime( year_tmp , month_tmp , day_tmp, hour_tmp, minute_tmp);
+	    		    	
+	    }
+	       
+	       
+
+	    private float validationFlight_Hours( String Flight_Hours ) throws FormValidationException {
+	    	
+	    	float FH_tmp;
+	    	
+	        if ( Flight_Hours != null ) {
+	            if ( Flight_Hours.length() < 2 ) {
+	                throw new FormValidationException( "La durée de votre vol doit contenir au moins 2 caractères." );
+	            }
+	                try { 
+			    		FH_tmp = Float.parseFloat(Flight_Hours); 
+			    	}
+	                catch ( NumberFormatException e ) {
+			    		FH_tmp = -1; 
+			    		throw new FormValidationException ("Merci d'entrer la durée de votre vol.");
+	            }
+	            } else {
+	            	FH_tmp = -1;
+	            	throw new FormValidationException( "Merci d'entrer la durée de votre vol." );
+	        }
+	        return FH_tmp;
+	    }
+	        
+	    private int validationFlight_Cycle( String Flight_Cycle ) throws FormValidationException {
+	    	int FC_tmp;
+	        if ( Flight_Cycle != null ) {
+	            if ( Flight_Cycle.length() < 1 ) {
+	                throw new FormValidationException( "Le nombre de cycle effectué durant votre vol doit contenir au moins 1 caractère." );
+	            }
+	            try { 
+		    		FC_tmp = Integer.parseInt(Flight_Cycle); 
+		    	}
+                catch ( NumberFormatException e ) {
+		    		FC_tmp = -1; 
+		    		throw new FormValidationException ("Merci d'entrer la durée de votre vol.");
+                }
+                } else {
+                	FC_tmp = -1;
+                	throw new FormValidationException( "Merci d'entrer la durée de votre vol." );
+	        }
+	        return FC_tmp;
+	    }
 	    
+
+	    private void validationRemarque( String Remarque ) throws FormValidationException {
+	        if ( Remarque != null && Remarque.length() < 1 ) {
+	            throw new FormValidationException( "Vos remarques doivent contenir au moins 1 caractère." );
+	        }
+	    }
 	    
+	    private int validationHuile( String Huile) throws FormValidationException {
+	        int Huile_tmp;
+	    	if ( Huile != null ) {
+	            if ( Huile.length() < 2 ) {
+	                throw new FormValidationException( "La quantité d'huile ajoutée doit contenir au moins 2 caractères." );
+	            }
+	            try { 
+		    		Huile_tmp = Integer.parseInt(Huile); 
+		    	}
+	            catch ( NumberFormatException e ) {
+		    		Huile_tmp = -1; 
+		    		throw new FormValidationException ("Merci d'entrer la quantité d'huile ajoutée.");
+                }
+	        } else {
+	        	Huile_tmp = -1;
+	            throw new FormValidationException( "Merci d'entrer la quantité d'huile ajoutée." );
+	        }
+	    	return Huile_tmp;
+	    }
 	    
+	    private int validationCarburant( String Carburant ) throws FormValidationException {
+	    	int Carburant_tmp;
+	        if ( Carburant != null ) {
+	            if ( Carburant.length() < 2 ) {
+	                throw new FormValidationException( "La quantité de carburant ajouté doit contenir au moins 2 caractères." );
+	            }
+	            try { 
+		    		Carburant_tmp = Integer.parseInt(Carburant); 
+		    	}
+	            catch ( NumberFormatException e ) {
+		    		Carburant_tmp = -1; 
+		    		throw new FormValidationException ("Merci d'entrer la quantité de carburant ajouté.");
+                }
+	        } else {
+	        	Carburant_tmp = -1;
+	            throw new FormValidationException( "Merci d'entrer la quantité de carburant ajouté." );
+	        }
+	        return Carburant_tmp;
+	    }
+	    
+	    /*
+	     * Ajoute un message correspondant au champ spécifié à la map des erreurs.
+	     */
+	    private void setErreur( String champ, String message ) {
+	        erreurs.put( champ, message );
+	    }
+
+	    /*
+	     * Méthode utilitaire qui retourne null si un champ est vide, et son contenu
+	     * sinon.
+	     */
+	    private static String getValeurChamp( HttpServletRequest request, String nomChamp ) {
+	        String valeur = request.getParameter( nomChamp );
+	        if ( valeur == null || valeur.trim().length() == 0 ) {
+	            return null;
+	        } else {
+	            return valeur;
+	        }
+	    }
+
+	    
+
 	    
 	    
 	    
