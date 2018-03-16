@@ -15,7 +15,7 @@ public class vol {
 	
 	@Id
 	@GeneratedValue( strategy = GenerationType.IDENTITY)
-	private int id_vol;
+	private Long id_vol;
 	@ManyToOne
     @JoinColumn( name = "id_client" )
 	private int ac_id;
@@ -27,10 +27,10 @@ public class vol {
 	private int huile;
 	private int carburant;
 	
-	public int getId_vol() {
+	public Long getId_vol() {
 		return id_vol;
 	}
-	public void setId_vol(int id_vol) {
+	public void setId_vol(Long id_vol) {
 		this.id_vol = id_vol;
 	}
 	public int getAc_id() {

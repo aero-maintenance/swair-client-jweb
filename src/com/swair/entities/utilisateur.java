@@ -13,7 +13,7 @@ public class utilisateur {
 	
 	@Id
 	@GeneratedValue( strategy = GenerationType.IDENTITY)
-	private int user_id;
+	private Long user_id;
 	private String adresse;
 	private String ville;
 	private String code_postale;
@@ -26,10 +26,10 @@ public class utilisateur {
 	public String getnom_aeroclub() {
 		return nom_aeroclub;
 	}
-	public int getUser_id() {
+	public Long getUser_id() {
 		return user_id;
 	}
-	public void setUser_id(int user_id) {
+	public void setUser_id(Long user_id) {
 		this.user_id = user_id;
 	}
 	public String getAdresse() {

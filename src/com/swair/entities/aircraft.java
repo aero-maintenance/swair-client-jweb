@@ -19,7 +19,7 @@ public class aircraft {
 	@ManyToOne
     @JoinColumn( name = "id_client" )
 	
-	private int user_id;
+	private Long user_id;
 	private String modele;
 	private String immatriculation;
 	private float total_FH;
@@ -34,10 +34,10 @@ public class aircraft {
 	public void setAc_id(int ac_id) {
 		this.ac_id = ac_id;
 	}
-	public int getUser_id() {
+	public Long getUser_id() {
 		return user_id;
 	}
-	public void setUser_id(int user_id) {
+	public void setUser_id(Long user_id) {
 		this.user_id = user_id;
 	}
 	public String getModele() {

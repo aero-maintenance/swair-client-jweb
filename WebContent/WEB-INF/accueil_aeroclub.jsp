@@ -7,6 +7,10 @@
 <title>Accueil</title>
 </head>
 <body>
-
+	<c:import url="/inc/menu.jsp" ></c:import>
+	<div id="corps">
+		
+	
+	</div>
 </body>
 </html>
