@@ -7,45 +7,46 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import com.swair.entities.vol;
+import com.swair.entities.utilisateur;
 
 @Stateless
-public class VolDAO {
-
+public class UtilisateurDAO {
+	
     // Injection du manager, qui s'occupe de la connexion avec la BDD
     @PersistenceContext( unitName = "softwair" )
     private EntityManager em;
 
-    public vol trouver( long id ) throws DAOException {
+    public utilisateur trouver( long id ) throws DAOException {
         try {
-            return em.find( vol.class, id );
+            return em.find( utilisateur.class, id );
         } catch ( Exception e ) {
             throw new DAOException( e );
         }
     }
 
-    public void creer( vol vol ) throws DAOException {
+    public void creer( utilisateur utilisateur ) throws DAOException {
         try {
-            em.persist( vol );
+            em.persist( utilisateur );
         } catch ( Exception e ) {
             throw new DAOException( e );
         }
     }
 
-    public List<vol> lister() throws DAOException {
+    public List<utilisateur> lister() throws DAOException {
         try {
-            TypedQuery<vol> query = em.createQuery( "SELECT c FROM vol c ORDER BY c.id_vol", vol.class );
+            TypedQuery<utilisateur> query = em.createQuery( "SELECT c FROM vol c ORDER BY c.user_id", utilisateur.class );
             return query.getResultList();
         } catch ( Exception e ) {
             throw new DAOException( e );
         }
     }
 
-    public void supprimer( vol vol ) throws DAOException {
+    public void supprimer( utilisateur utilisateur ) throws DAOException {
         try {
-            em.remove( em.merge( vol ) );
+            em.remove( em.merge( utilisateur ) );
         } catch ( Exception e ) {
             throw new DAOException( e );
         }
-    }
+    }	
+
 }
