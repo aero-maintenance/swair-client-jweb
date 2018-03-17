@@ -92,12 +92,13 @@ public class CreationVolForm {
 	    }
 	    
 	    private void traiterImmat_avion( String Immat_avion, vol vol ) {
-	    		        try {
-	            validationImmat_avion( Immat_avion );
+	    	int valeurImmat_avion = -1;
+	    	try {
+	            valeurImmat_avion = validationImmat_avion( Immat_avion );
 	        } catch ( FormValidationException e ) {
 	            setErreur( CHAMP_AVION, e.getMessage() );
 	        }
-	        vol.setAc_id( Immat_avion );  // Récupérer l'ID Avion en fonction de l'immat
+	        vol.setAc_id( valeurImmat_avion );  // Récupérer l'ID Avion en fonction de l'immat
 	    }
 	    
 	    private void traiterDate_Heure( String Annee, String Mois, String Jour, String Heure, String Minute, vol vol ) {
@@ -159,17 +160,28 @@ public class CreationVolForm {
 	        vol.setCarburant( valeurCarburant);
 	    }
 	    
-	    private void validationImmat_avion( String Immat_avion ) throws FormValidationException {
+	    private int validationImmat_avion( String Immat_avion ) throws FormValidationException {
+	    	
+	    	int Immat_avion_tmp;
+	    	
 	        if ( Immat_avion != null ) {
 	            if ( Immat_avion.length() < 6 ) {
 	                throw new FormValidationException( "L'immatriculation de l'avion doit contenir au moins 6 caractères." );
 	            }
+	            try { 
+		    		Immat_avion_tmp = Integer.parseInt(Immat_avion); 
+		    	}
+                catch ( NumberFormatException e ) {
+		    		Immat_avion_tmp = -1; 
+		    		throw new FormValidationException ("Merci d'entrer la durée de votre vol.");
+            }
 	        } else {
+	        	Immat_avion_tmp = -1; 
 	            throw new FormValidationException( "Merci d'entrer l'immatriculation de l'avion." );
 	        }
+	        return Immat_avion_tmp;
 	    }
 	    
-
 	    private DateTime validationDate_Heure( String Annee, String Mois, String Jour, String Heure, String Minute ) throws FormValidationException {
 	      
 	    	int year_tmp;
