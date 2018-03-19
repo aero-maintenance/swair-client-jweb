@@ -16,8 +16,10 @@ public class vol {
 	@Id
 	@GeneratedValue( strategy = GenerationType.IDENTITY)
 	private Long id_vol;
-	@ManyToOne
-    @JoinColumn( name = "id_client" )
+	
+	
+	@ManyToOne(targetEntity=aircraft.class)
+    @JoinColumn( name = "id_ac" )
 	private int ac_id;
 	
 	private DateTime date_heure;

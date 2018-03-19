@@ -14,24 +14,26 @@ public class aircraft {
 	
 	@Id
 	@GeneratedValue( strategy = GenerationType.IDENTITY)
-	private int ac_id;
+	private Long ac_id;
 	
-	@ManyToOne
-    @JoinColumn( name = "id_client" )
+	@ManyToOne(targetEntity=utilisateur.class)
+    @JoinColumn( name = "user_id" )
 	
 	private Long user_id;
 	private String modele;
 	private String immatriculation;
 	private float total_FH;
-	private int total_FC;
-	private int msn;
+	private Long total_FC;
+	private Long msn;
 	private String statut;
 	private Date date_kardex;
 	private String remarque;
-	public int getAc_id() {
+	
+	
+	public Long getAc_id() {
 		return ac_id;
 	}
-	public void setAc_id(int ac_id) {
+	public void setAc_id(Long ac_id) {
 		this.ac_id = ac_id;
 	}
 	public Long getUser_id() {
@@ -58,16 +60,16 @@ public class aircraft {
 	public void setTotal_FH(float total_FH) {
 		this.total_FH = total_FH;
 	}
-	public int getTotal_FC() {
+	public Long getTotal_FC() {
 		return total_FC;
 	}
-	public void setTotal_FC(int total_FC) {
+	public void setTotal_FC(Long total_FC) {
 		this.total_FC = total_FC;
 	}
-	public int getMsn() {
+	public Long getMsn() {
 		return msn;
 	}
-	public void setMsn(int msn) {
+	public void setMsn(Long msn) {
 		this.msn = msn;
 	}
 	public String getStatut() {

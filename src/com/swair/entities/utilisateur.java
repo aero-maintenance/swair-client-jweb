@@ -9,16 +9,18 @@ import javax.persistence.Id;
 public class utilisateur {
 	
 	
-	private String nom_aeroclub;
+	
 	
 	@Id
 	@GeneratedValue( strategy = GenerationType.IDENTITY)
 	private Long user_id;
+	private String nom_aeroclub;
 	private String adresse;
 	private String ville;
 	private String code_postale;
 	private String password;
 	private String email;
+	private String telephone;
 	
 	public void setnom_aeroclub(String nom_aeroclub) {
 		this.nom_aeroclub = nom_aeroclub;
@@ -61,5 +63,11 @@ public class utilisateur {
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	public String getTelephone() {
+		return telephone;
+	}
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
 	}
 }

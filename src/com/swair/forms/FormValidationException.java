@@ -1,4 +1,6 @@
 package com.swair.forms;
+import javax.swing.JFrame;
+
 
 public class FormValidationException extends Exception {
     /*

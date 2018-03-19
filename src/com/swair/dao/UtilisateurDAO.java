@@ -34,7 +34,7 @@ public class UtilisateurDAO {
 
     public List<utilisateur> lister() throws DAOException {
         try {
-            TypedQuery<utilisateur> query = em.createQuery( "SELECT c FROM vol c ORDER BY c.user_id", utilisateur.class );
+            TypedQuery<utilisateur> query = em.createQuery( "SELECT c FROM utilisateur c ORDER BY c.user_id", utilisateur.class );
             return query.getResultList();
         } catch ( Exception e ) {
             throw new DAOException( e );
