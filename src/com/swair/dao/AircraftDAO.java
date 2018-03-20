@@ -23,6 +23,15 @@ public class AircraftDAO {
             throw new DAOException( e );
         }
     }
+   
+    public List<aircraft> trouver( String Immat_avion ) throws DAOException {
+        try {
+        	TypedQuery<aircraft> query = em.createQuery( "SELECT c FROM aircraft c WHERE c.immatriculation = "+ Immat_avion, aircraft.class );
+            return query.getResultList();
+        } catch ( Exception e ) {
+            throw new DAOException( e );
+        }
+    }
 
     public void creer( aircraft aircraft ) throws DAOException {
         try {
