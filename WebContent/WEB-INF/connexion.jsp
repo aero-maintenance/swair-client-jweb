@@ -7,7 +7,7 @@
         <link type="text/css" rel="stylesheet" href="<c:url value="/inc/style.css"/>" />
     </head>
     <body>
-        <form method="post" action="<c:url value="/connexion" />">
+        <form method="post" action="<c:url value="/Connexion" />">
             <fieldset>
                 <legend>Connexion</legend>
                 <p>Vous pouvez vous connecter via ce formulaire.</p>

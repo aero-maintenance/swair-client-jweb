@@ -108,7 +108,7 @@ public class Connexion extends HttpServlet {
         request.setAttribute( ATT_FORM, form );
         request.setAttribute( ATT_USER, utilisateur );
 
-        this.getServletContext().getRequestDispatcher( VUE_ACCUEIL ).forward( request, response );
+        this.getServletContext().getRequestDispatcher( VUE_CONNEXION ).forward( request, response );
     }
     
     private static String getCookieValue( HttpServletRequest request, String nom ) {
