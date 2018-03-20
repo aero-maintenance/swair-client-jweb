@@ -20,7 +20,7 @@ public class vol {
 	
 	@ManyToOne(targetEntity=aircraft.class)
     @JoinColumn( name = "id_ac" )
-	private int ac_id;
+	private Long ac_id;
 	
 	private DateTime date_heure;
 	private float FH;
@@ -35,10 +35,10 @@ public class vol {
 	public void setId_vol(Long id_vol) {
 		this.id_vol = id_vol;
 	}
-	public int getAc_id() {
+	public Long getAc_id() {
 		return ac_id;
 	}
-	public void setAc_id(int ac_id) {
+	public void setAc_id(Long ac_id) {
 		this.ac_id = ac_id;
 	}
 	public DateTime getDate_heure() {

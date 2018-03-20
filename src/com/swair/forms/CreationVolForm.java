@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -16,8 +18,10 @@ import javax.servlet.http.Part;
 
 import org.joda.time.DateTime;
 
+import com.swair.dao.AircraftDAO;
 import com.swair.dao.DAOException;
 import com.swair.dao.VolDAO;
+import com.swair.entities.aircraft;
 import com.swair.entities.vol;
 
 import eu.medsea.mimeutil.MimeUtil;
@@ -36,6 +40,7 @@ public class CreationVolForm {
 	    private static final String CHAMP_HOUR 			= "Heure";
 	    private static final String CHAMP_MINUTE 		= "Minute";
 
+	    AircraftDAO 				aircraftDAO ;
 	    private String              resultat;
 	    private Map<String, String> erreurs         = new HashMap<String, String>();
 	    private VolDAO          volDAO;
@@ -92,7 +97,7 @@ public class CreationVolForm {
 	    }
 	    
 	    private void traiterImmat_avion( String Immat_avion, vol vol ) {
-	    	int valeurImmat_avion = -1;
+	    	Long valeurImmat_avion = 0L;
 	    	try {
 	            valeurImmat_avion = validationImmat_avion( Immat_avion );
 	        } catch ( FormValidationException e ) {
@@ -160,27 +165,24 @@ public class CreationVolForm {
 	        vol.setCarburant( valeurCarburant);
 	    }
 	    
-	    private int validationImmat_avion( String Immat_avion ) throws FormValidationException {
+	    private Long validationImmat_avion( String Immat_avion ) throws FormValidationException {
 	    	
-	    	int Immat_avion_tmp;
+	    	  
+	    	List<aircraft> liste_avion = aircraftDAO.trouver(Immat_avion);
 	    	
 	        if ( Immat_avion != null ) {
-	            if ( Immat_avion.length() < 6 ) {
+	            if ( Immat_avion.length() < 6 && liste_avion.isEmpty()) {
 	                throw new FormValidationException( "L'immatriculation de l'avion doit contenir au moins 6 caractères." );
 	            }
-	            try { 
-		    		Immat_avion_tmp = Integer.parseInt(Immat_avion); 
-		    	}
-                catch ( NumberFormatException e ) {
-		    		Immat_avion_tmp = -1; 
-		    		throw new FormValidationException ("Merci d'entrer la durée de votre vol.");
-            }
+	           
 	        } else {
-	        	Immat_avion_tmp = -1; 
+	        	
 	            throw new FormValidationException( "Merci d'entrer l'immatriculation de l'avion." );
 	        }
-	        return Immat_avion_tmp;
+	        
+	        return liste_avion.get(0).getAc_id();  
 	    }
+	    
 	    
 	    private DateTime validationDate_Heure( String Annee, String Mois, String Jour, String Heure, String Minute ) throws FormValidationException {
 	      
