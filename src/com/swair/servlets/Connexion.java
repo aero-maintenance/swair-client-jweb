@@ -2,6 +2,7 @@ package com.swair.servlets;
 
 import java.io.IOException;
 
+import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
@@ -17,6 +18,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 
+import com.swair.dao.UtilisateurDAO;
 import com.swair.entities.utilisateur;
 import com.swair.forms.ConnexionForm;
 
@@ -38,6 +40,9 @@ public class Connexion extends HttpServlet {
     public static final String VUE_ACCUEIL					= "/WEB-INF/accueil_aeroclub.jsp.";
     public static final String CHAMP_MEMOIRE             	= "memoire";
     public static final int    COOKIE_MAX_AGE            	= 60 * 60 * 24 * 365;  // 1 an
+    
+    @EJB
+    private UtilisateurDAO          utilisateurDao;
     
     
     public void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
@@ -72,11 +77,13 @@ public class Connexion extends HttpServlet {
 
     public void doPost( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
         /* Préparation de l'objet formulaire */
-        ConnexionForm form = new ConnexionForm();
+        ConnexionForm form = new ConnexionForm(utilisateurDao);
 
         /* Traitement de la requête et récupération du bean en résultant */
-        utilisateur utilisateur = form.connecterUtilisateur( request );
-
+        utilisateur utilisateur = form.verifier_utilisateur(request); //utilisateurDao.trouver("test@test.com");
+        if(utilisateur != null)
+        	System.out.println("Validation de l'utilisateur");
+        
         /* Récupération de la session depuis la requête */
         HttpSession session = request.getSession();
 

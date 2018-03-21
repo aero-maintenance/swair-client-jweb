@@ -1,18 +1,31 @@
 package com.swair.forms;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 
+import org.jasypt.util.password.ConfigurablePasswordEncryptor;
+
+import com.swair.dao.UtilisateurDAO;
 import com.swair.entities.utilisateur;
 
 public final class ConnexionForm {
     private static final String CHAMP_EMAIL  = "email";
     private static final String CHAMP_PASS   = "password";
+    private static final String USER   = "user";
+    
+    @EJB
+    private UtilisateurDAO utilisateurDAO;
 
     private String              resultat;
     private Map<String, String> erreurs      = new HashMap<String, String>();
+    
+    public ConnexionForm(UtilisateurDAO utilisateurDao) {
+    	this.utilisateurDAO = utilisateurDao;
+    }
 
     public String getResultat() {
         return resultat;
@@ -22,6 +35,41 @@ public final class ConnexionForm {
         return erreurs;
     }
 
+    /**
+     * 
+     * @param request
+     * @return utilisateur
+     * permet de vérifier si l'utilisateur est enregistre dans la base de donnée
+     */
+    public utilisateur verifier_utilisateur( HttpServletRequest request ) {
+    	/* Récupération des champs du formulaire */
+        String email = getValeurChamp( request, CHAMP_EMAIL );
+        String password = getValeurChamp( request, CHAMP_PASS );
+        
+                
+        /* Validation du champ email. */
+        try {
+            validationEmail( email );
+        } catch ( Exception e ) {
+            setErreur( CHAMP_EMAIL, e.getMessage() );
+        }
+        
+        try {
+            validationMotDePasse( password );
+        } catch ( Exception e ) {
+            setErreur( CHAMP_PASS, e.getMessage() );
+        }
+       utilisateur user = utilisateurDAO.trouver(email);
+       try {
+    	   validationUser(user,password);
+       } catch( Exception e ){
+    	   setErreur( USER, e.getMessage() );
+    	   user=null;
+       }
+       
+       return user;
+    }
+    
     public utilisateur connecterUtilisateur( HttpServletRequest request ) {
         /* Récupération des champs du formulaire */
         String email = getValeurChamp( request, CHAMP_EMAIL );
@@ -55,6 +103,21 @@ public final class ConnexionForm {
         return utilisateur;
     }
 
+    private void validationUser(utilisateur user, String password) throws Exception {
+    	ConfigurablePasswordEncryptor passwordEncryptor = new ConfigurablePasswordEncryptor();
+        passwordEncryptor.setAlgorithm( "SHA-256" );
+        passwordEncryptor.setPlainDigest( false );
+        if(user != null) {
+        	if( !passwordEncryptor.checkPassword(password, user.getPassword())) {
+        		throw new Exception( "Les identifiants sont incorrects" );
+        	}
+        }else {
+        	throw new Exception( "Les identifiants sont incorrects" );
+        }
+        
+    }
+    	
+    
     /**
      * Valide l'adresse email saisie.
      */

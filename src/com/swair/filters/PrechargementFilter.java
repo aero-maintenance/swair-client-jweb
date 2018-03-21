@@ -16,6 +16,8 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.jasypt.util.password.ConfigurablePasswordEncryptor;
+
 import com.swair.dao.UtilisateurDAO;
 import com.swair.dao.VolDAO;
 import com.swair.entities.utilisateur;
@@ -41,7 +43,25 @@ public class PrechargementFilter implements Filter {
 
         /* Récupération de la session depuis la requête */
         HttpSession session = request.getSession();
-
+        
+        
+        /*ajout d'un utilisateur pour test*/
+        /*ConfigurablePasswordEncryptor passwordEncryptor = new ConfigurablePasswordEncryptor();
+        passwordEncryptor.setAlgorithm( "SHA-256" );
+        passwordEncryptor.setPlainDigest( false );
+        String motDePasseChiffre = passwordEncryptor.encryptPassword( "test1" );
+        
+        
+        utilisateur user = new utilisateur();
+        user.setnom_aeroclub("test1");
+        user.setAdresse("8 rue du test");
+        user.setVille("testville");
+        user.setCode_postale("36753");
+        user.setEmail("test1@test.com");
+        user.setTelephone("0642742598");
+        user.setPassword(motDePasseChiffre);
+        utilisateurDao.creer(user);*/
+        
         /*
          * Si la map des clients n'existe pas en session, alors l'utilisateur se
          * connecte pour la première fois et nous devons précharger en session

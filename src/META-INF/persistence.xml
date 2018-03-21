@@ -13,7 +13,8 @@
         	<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/db_softwair" />
         	<property name="javax.persistence.jdbc.user" value="swair" />
         	<property name="javax.persistence.jdbc.password" value="prototype" />  -->
-        	
+        	<property name="javax.persistence.jdbc.useSSL" value="false"/>
+        	<property name="javax.persistence.jdbc.autoReconnect" value="true"/>
             <property name="eclipselink.logging.level.sql" value="FINE"/>
             <property name="eclipselink.logging.parameters" value="true"/>
         </properties>		
