@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS db_softwair.utilisateur (
 	adresse VARCHAR(255) NOT NULL,
 	ville VARCHAR(255) NOT NULL,
 	code_postale VARCHAR(255) NOT NULL,
-	password CHAR(64) NOT NULL,
+	password CHAR(56) NOT NULL,
 	email VARCHAR(255) NOT NULL,
 	telephone varchar(15),
 	PRIMARY KEY (user_id)
@@ -58,4 +58,4 @@ CREATE TABLE IF NOT EXISTS db_softwair.vol (
 ENGINE=INNODB;
 
 INSERT INTO utilisateur
-VALUES('1','aeroclub1','B01, parc de la verrerie','Creon','33670','967520ae23e8ee14888bae72809031b98398ae4a636773e18fff917d77679334','yanou3345@hotmail.fr','0258653598');
+VALUES('1','aeroclub1','B01, parc de la verrerie','Creon','33670','967520ae23e8ee14888bae72809031b98398ae4a636773e18fff917d','yanou3345@hotmail.fr','0258653598');
