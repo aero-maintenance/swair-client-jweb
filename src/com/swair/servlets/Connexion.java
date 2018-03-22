@@ -23,7 +23,7 @@ import com.swair.entities.utilisateur;
 import com.swair.forms.ConnexionForm;
 
 
-@WebServlet( name="Connexion", urlPatterns = "/Connexion" )
+@WebServlet( name="Connexion", urlPatterns = "/connexion" )
 public class Connexion extends HttpServlet {
    	
 	/**
@@ -37,7 +37,7 @@ public class Connexion extends HttpServlet {
     public static final String COOKIE_DERNIERE_CONNEXION 	= "derniereConnexion";
     public static final String FORMAT_DATE               	= "dd/MM/yyyy HH:mm:ss";
     public static final String VUE_CONNEXION              	= "/WEB-INF/connexion.jsp";
-    public static final String VUE_ACCUEIL					= "/WEB-INF/accueil_aeroclub.jsp.";
+    public static final String VUE_FLIGHT_REGISTERING		= "/account/flight_registering.jsp";
     public static final String CHAMP_MEMOIRE             	= "memoire";
     public static final int    COOKIE_MAX_AGE            	= 60 * 60 * 24 * 365;  // 1 an
     
@@ -46,6 +46,7 @@ public class Connexion extends HttpServlet {
     
     
     public void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
+    	
         /* Tentative de récupération du cookie depuis la requête */
         String derniereConnexion = getCookieValue( request, COOKIE_DERNIERE_CONNEXION );
         /* Si le cookie existe, alors calcul de la durée */
@@ -78,11 +79,15 @@ public class Connexion extends HttpServlet {
     public void doPost( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
         /* Préparation de l'objet formulaire */
         ConnexionForm form = new ConnexionForm(utilisateurDao);
+        Boolean valid_user = false;
 
         /* Traitement de la requête et récupération du bean en résultant */
         utilisateur utilisateur = form.verifier_utilisateur(request); //utilisateurDao.trouver("test@test.com");
-        if(utilisateur != null)
+        if(utilisateur != null) {
         	System.out.println("Validation de l'utilisateur");
+        	valid_user = true;
+        }
+        	
         
         /* Récupération de la session depuis la requête */
         HttpSession session = request.getSession();
@@ -110,12 +115,17 @@ public class Connexion extends HttpServlet {
             /* Demande de suppression du cookie du navigateur */
             setCookie( response, COOKIE_DERNIERE_CONNEXION, "", 0 );
         }
-
-        /* Stockage du formulaire et du bean dans l'objet request */
-        request.setAttribute( ATT_FORM, form );
-        request.setAttribute( ATT_USER, utilisateur );
-
-        this.getServletContext().getRequestDispatcher( VUE_CONNEXION ).forward( request, response );
+        
+        if(valid_user) {
+        	/* Stockage du formulaire et du bean dans l'objet request */
+        	request.setAttribute( ATT_FORM, form );
+            request.setAttribute( ATT_USER, utilisateur );
+            this.getServletContext().getRequestDispatcher( VUE_FLIGHT_REGISTERING ).forward( request, response );
+        }else {
+        	this.getServletContext().getRequestDispatcher( VUE_CONNEXION ).forward( request, response );
+        }
+        
+        
     }
     
     private static String getCookieValue( HttpServletRequest request, String nom ) {

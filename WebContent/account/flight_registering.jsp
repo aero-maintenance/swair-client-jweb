@@ -9,21 +9,34 @@
 	<link type="text/css" rel="stylesheet" href="<c:url value="/inc/style.css"/>" />
 </head>
 <body>
+	<c:import url="/inc/menu.jsp" ></c:import>
 	<form method="post" action="<c:url value="/enregistrementVol" />">
             <fieldset>
                 <legend>Enregistrement d'un vol</legend>
                 <p>Enregistrer vos vols via ce formulaire</p>
                 
                 <label for="date">Date <span class="requis">*</span></label>
-                <input type="text" id="date" name="date" value="<c:out value="${vol.date_heure}"/>" size="4" maxlength="2" />
+                <input type="date" id="date" name="date" value="<c:out value="${vol.date_heure}"/>" size="4" maxlength="2" />
                 <span class="erreur">${form.erreurs['date']}</span>
                 <br />
                 
-                <label for="immatriculation">Immatriculation <span class="requis">*</span></label>
-                <input type="text" id="immatriculation" name="immatriculation" value="<c:out value="${immatricalation}"/>" size="20" maxlength="20" />
-                <!--<span class="erreur">${form.erreurs['date']}</span>-->
+                <label for="time">heure <span class="requis">*</span></label>
+                <input type="time" id="time" name="time" value="<c:out value="${vol.date_heure}"/>" size="4" maxlength="2" />
+                <span class="erreur">${form.erreurs['heure']}</span>
                 <br />
                 
+                <label for="listAircrafts">Immatriculation <span class="requis">*</span></label>
+                <select name="listAircrafts" id="listAircrafts">
+                	<option value="">immatriculation...</option>
+                    <%-- Boucle sur la map des clients --%>
+                    <c:forEach items="${ sessionScope.clients }" var="mapClients">
+                    <%--  L'expression EL ${mapClients.value} permet de cibler l'objet Client stocké en tant que valeur dans la Map, 
+                    et on cible ensuite simplement ses propriétés nom et prenom comme on le ferait avec n'importe quel bean. --%>
+                    <option value="${ mapClients.key }">${ mapClients.value.email }</option>
+                    </c:forEach>
+                </select>
+                <br />
+                                
                 <label for="FH">FH <span class="requis">*</span></label>
                 <input type="text" id="FH" name="FH" value="<c:out value="${vol.FH}"/>" size="5" maxlength="5" />
                 <!-- <span class="erreur">${form.erreurs['date']}</span> -->
@@ -42,6 +55,9 @@
                 <label for="carburant">Carburant <span class="requis">*</span></label>
                 <input type="text" id="carburant" name="carburant" value="<c:out value="${vol.carburant}"/>" size="5" maxlength="5" />
                 <!-- <span class="erreur">${form.erreurs['date']}</span> -->
+                <br />
+                <br />
+                <input type="submit" value="Enregistrer" class="sansLabel" />
                 <br />
                 
             </fieldset>

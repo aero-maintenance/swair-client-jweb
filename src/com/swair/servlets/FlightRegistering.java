@@ -9,10 +9,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
-@WebServlet( name="FlightRegistering", urlPatterns = "/FlightRegistering" )
+@WebServlet( name="FlightRegistering", urlPatterns = "/account/flightRegistering" )
 public class FlightRegistering extends HttpServlet {
 	
-	 public static final String VUE = "/WEB-INF/flight_registering.jsp";
+	 public static final String VUE = "/account/flight_registering.jsp";
 
 	public void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
         /* À la réception d'une requête GET, affichage de la liste des clients */
