@@ -1,6 +1,8 @@
 package com.swair.entities;
 
-import java.sql.Date;
+
+
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,7 +24,8 @@ public class aircraft {
 	private Long user_id;
 	private String modele;
 	private String immatriculation;
-	private float total_FH;
+	private String manufacturer;
+	private Double total_FH;
 	private Long total_FC;
 	private Long msn;
 	private String statut;
@@ -54,10 +57,10 @@ public class aircraft {
 	public void setImmatriculation(String immatriculation) {
 		this.immatriculation = immatriculation;
 	}
-	public float getTotal_FH() {
+	public Double getTotal_FH() {
 		return total_FH;
 	}
-	public void setTotal_FH(float total_FH) {
+	public void setTotal_FH(Double total_FH) {
 		this.total_FH = total_FH;
 	}
 	public Long getTotal_FC() {
@@ -89,6 +92,12 @@ public class aircraft {
 	}
 	public void setRemarque(String remarque) {
 		this.remarque = remarque;
+	}
+	public String getManufacturer() {
+		return manufacturer;
+	}
+	public void setManufacturer(String manufacturer) {
+		this.manufacturer = manufacturer;
 	}
 
 }

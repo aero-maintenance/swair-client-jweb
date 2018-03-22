@@ -1,6 +1,7 @@
 package com.swair.filters;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,8 +19,10 @@ import javax.servlet.http.HttpSession;
 
 import org.jasypt.util.password.ConfigurablePasswordEncryptor;
 
+import com.swair.dao.AircraftDAO;
 import com.swair.dao.UtilisateurDAO;
 import com.swair.dao.VolDAO;
+import com.swair.entities.aircraft;
 import com.swair.entities.utilisateur;
 import com.swair.entities.vol;
 
@@ -31,7 +34,9 @@ public class PrechargementFilter implements Filter {
     @EJB
     private UtilisateurDAO          utilisateurDao;
     @EJB
-    private VolDAO        volDao;
+    private VolDAO        			volDao;
+    @EJB
+    private AircraftDAO				aircraftDao;
 
     public void init( FilterConfig filterConfig ) throws ServletException {
     }
@@ -46,22 +51,36 @@ public class PrechargementFilter implements Filter {
         
         
         /*ajout d'un utilisateur pour test*/
-        /*ConfigurablePasswordEncryptor passwordEncryptor = new ConfigurablePasswordEncryptor();
+       
+        ConfigurablePasswordEncryptor passwordEncryptor = new ConfigurablePasswordEncryptor();
         passwordEncryptor.setAlgorithm( "SHA-256" );
         passwordEncryptor.setPlainDigest( false );
-        String motDePasseChiffre = passwordEncryptor.encryptPassword( "test1" );
+        String motDePasseChiffre = passwordEncryptor.encryptPassword( "test" );
         
         
         utilisateur user = new utilisateur();
-        user.setnom_aeroclub("test1");
+        user.setnom_aeroclub("test");
         user.setAdresse("8 rue du test");
         user.setVille("testville");
         user.setCode_postale("36753");
-        user.setEmail("test1@test.com");
+        user.setEmail("test@test.com");
         user.setTelephone("0642742598");
         user.setPassword(motDePasseChiffre);
-        utilisateurDao.creer(user);*/
+        utilisateurDao.creer(user);
         
+        /*ajout aircraft pour test*/
+        aircraft plane = new aircraft();
+        plane.setUser_id(new Long(2));
+        plane.setManufacturer("Cessna");
+        plane.setModele("172 Cutlass RG");
+        plane.setImmatriculation("F-WDTC");
+        plane.setTotal_FH(5284.5);
+        plane.setTotal_FC(new Long(8086));
+        plane.setMsn(new Long(458));
+        plane.setStatut("LSA");
+        plane.setDate_kardex(new Date());
+        plane.setRemarque("RAS just for test");
+        aircraftDao.creer(plane);
         /*
          * Si la map des clients n'existe pas en session, alors l'utilisateur se
          * connecte pour la première fois et nous devons précharger en session

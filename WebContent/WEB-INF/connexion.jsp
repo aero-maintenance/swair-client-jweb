@@ -29,7 +29,7 @@
                 <label for="memoire">Se souvenir de moi</label>
                 <input type="checkbox" id="memoire" name="memoire" />
                 <br />
-
+                
                 <input type="submit" value="Connexion" class="sansLabel" />
                 <br />
                 

@@ -14,6 +14,8 @@
             <fieldset>
                 <legend>Enregistrement d'un vol</legend>
                 <p>Enregistrer vos vols via ce formulaire</p>
+                <c:set var='session' value='${sessionScope}'/>
+                <p>Utilisateur connecter : ${session.sessionUtilisateur.nom_aeroclub}</p>
                 
                 <label for="date">Date <span class="requis">*</span></label>
                 <input type="date" id="date" name="date" value="<c:out value="${vol.date_heure}"/>" size="4" maxlength="2" />

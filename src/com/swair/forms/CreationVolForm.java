@@ -168,10 +168,10 @@ public class CreationVolForm {
 	    private Long validationImmat_avion( String Immat_avion ) throws FormValidationException {
 	    	
 	    	  
-	    	List<aircraft> liste_avion = aircraftDAO.trouver(Immat_avion);
+	    	aircraft avion = aircraftDAO.trouver(Immat_avion);
 	    	
 	        if ( Immat_avion != null ) {
-	            if ( Immat_avion.length() < 6 && liste_avion.isEmpty()) {
+	            if ( Immat_avion.length() < 6 && avion==null) {
 	                throw new FormValidationException( "L'immatriculation de l'avion doit contenir au moins 6 caractères." );
 	            }
 	           
@@ -180,7 +180,7 @@ public class CreationVolForm {
 	            throw new FormValidationException( "Merci d'entrer l'immatriculation de l'avion." );
 	        }
 	        
-	        return liste_avion.get(0).getAc_id();  
+	        return avion.getAc_id(); 
 	    }
 	    
 	    

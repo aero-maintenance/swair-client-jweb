@@ -47,6 +47,7 @@ public class Connexion extends HttpServlet {
     
     public void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
     	
+    	
         /* Tentative de récupération du cookie depuis la requête */
         String derniereConnexion = getCookieValue( request, COOKIE_DERNIERE_CONNEXION );
         /* Si le cookie existe, alors calcul de la durée */
@@ -139,6 +140,7 @@ public class Connexion extends HttpServlet {
         }
         return null;
     }
+    
     private static void setCookie( HttpServletResponse response, String nom, String valeur, int maxAge ) {
         Cookie cookie = new Cookie( nom, valeur );
         cookie.setMaxAge( maxAge );
