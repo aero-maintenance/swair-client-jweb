@@ -5,17 +5,11 @@
  http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
   	<persistence-unit name="softwair" transaction-type="JTA">
   		<jta-data-source>jdbc/bonecp_resource_swair</jta-data-source>
-		<class>com.swair.entities.utilisateur</class>
-		<class>com.swair.entities.aircraft</class>
-		<class>com.swair.entities.vol</class>
+		<class>com.swair.entities.Utilisateur</class>
+		<class>com.swair.entities.Aircraft</class>
+		<class>com.swair.entities.Vol</class>
 		<properties>
-			<!--<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
-        	<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/db_softwair" />
-        	<property name="javax.persistence.jdbc.user" value="swair" />
-        	<property name="javax.persistence.jdbc.password" value="prototype" />  -->
-        	<property name="javax.persistence.jdbc.useSSL" value="false"/>
-        	<property name="javax.persistence.jdbc.autoReconnect" value="true"/>
-            <property name="eclipselink.logging.level.sql" value="FINE"/>
+			<property name="eclipselink.logging.level.sql" value="FINE"/>
             <property name="eclipselink.logging.parameters" value="true"/>
         </properties>		
 	</persistence-unit>   

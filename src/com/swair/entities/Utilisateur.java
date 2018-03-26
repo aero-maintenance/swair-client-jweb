@@ -1,24 +1,27 @@
 package com.swair.entities;
 
+import java.io.Serializable;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
-public class utilisateur {
-	
-	
-	
-	
+@Table( name = "utilisateur")
+public class Utilisateur implements Serializable {
 	@Id
 	@GeneratedValue( strategy = GenerationType.IDENTITY)
 	private Long user_id;
+	
 	private String nom_aeroclub;
 	private String adresse;
 	private String ville;
 	private String code_postale;
 	private String password;
+	@Column( name = "email")
 	private String email;
 	private String telephone;
 	

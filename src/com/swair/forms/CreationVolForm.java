@@ -1,52 +1,48 @@
 package com.swair.forms;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collection;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.Part;
+import javax.servlet.http.HttpSession;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import com.swair.dao.AircraftDAO;
 import com.swair.dao.DAOException;
 import com.swair.dao.VolDAO;
-import com.swair.entities.aircraft;
-import com.swair.entities.vol;
-
-import eu.medsea.mimeutil.MimeUtil;
+import com.swair.entities.Aircraft;
+import com.swair.entities.Vol;
 
 public class CreationVolForm {
-		private static final String CHAMP_AVION     	= "Immat_Avion";
-	    private static final String CHAMP_DATEHEURE  	= "Date&Heure";
+	
+		private static final String ATT_SESSION_AC_LIST	= "sessionAircraftList";
+		private static final String CHAMP_AVION     	= "listAircrafts";
 	    private static final String CHAMP_FH   			= "Flight_Hours";
 	    private static final String CHAMP_FC			= "Flight_Cycle";
 	    private static final String CHAMP_REMARQUE      = "Remarque";
-	    private static final String CHAMP_HUILE   		= "Ajout_Huile";
-	    private static final String CHAMP_CARBURANT 	= "Ajout_Carburant";
-	    private static final String CHAMP_YEAR 			= "Année";
-	    private static final String CHAMP_MONTH			= "Mois";
-	    private static final String CHAMP_DAY 			= "Jour";
-	    private static final String CHAMP_HOUR 			= "Heure";
-	    private static final String CHAMP_MINUTE 		= "Minute";
+	    private static final String CHAMP_HUILE   		= "huile";
+	    private static final String CHAMP_CARBURANT 	= "carburant";
+	    private static final String CHAMP_DATE			= "date";
+	    private static final String CHAMP_TIME			= "time";
 
-	    AircraftDAO 				aircraftDAO ;
+	    private AircraftDAO 		aircraftDao ;
+	    private VolDAO          	volDao;
 	    private String              resultat;
-	    private Map<String, String> erreurs         = new HashMap<String, String>();
-	    private VolDAO          volDAO;
+	    private Map<String, String> erreurs= new HashMap<String, String>();
+	    
 
-	    public CreationVolForm( VolDAO volDAO ) {
-	        this.volDAO = volDAO;
+	    public CreationVolForm( VolDAO volDAO, AircraftDAO aircraftDao ) {
+	        this.volDao = volDAO;
+	        this.aircraftDao = aircraftDao;
 	    }
 
 	    public Map<String, String> getErreurs() {
@@ -57,35 +53,48 @@ public class CreationVolForm {
 	        return resultat;
 	    }
 	    
-	    public vol creervol( HttpServletRequest request, String chemin ) {
-	        String Immat_avion = getValeurChamp( request, CHAMP_AVION );
+	    public Vol creerVol( HttpServletRequest request) {
+	    	/**
+	    	 * récupération des informations de la page creationVol.jsp
+	    	 */
+	    	String date = getValeurChamp( request, CHAMP_DATE );
+	    	String time = getValeurChamp( request, CHAMP_TIME );
+	    	String key_avion = getValeurChamp( request, CHAMP_AVION );	    	
 	        String Flight_Hours = getValeurChamp( request, CHAMP_FH );
 	        String Flight_Cycle = getValeurChamp( request, CHAMP_FC );
 	        String Remarque = getValeurChamp( request, CHAMP_REMARQUE );
 	        String Huile = getValeurChamp( request, CHAMP_HUILE );
 	        String Carburant = getValeurChamp( request, CHAMP_CARBURANT );
-	        String Annee = getValeurChamp( request, CHAMP_YEAR );
-	        String Mois = getValeurChamp( request, CHAMP_MONTH );
-	        String Jour = getValeurChamp( request, CHAMP_DAY );
-	        String Heure = getValeurChamp( request, CHAMP_HOUR );
-	        String Minute = getValeurChamp( request, CHAMP_MINUTE );
 	        
-	        vol vol = new vol();
-
-	        traiterImmat_avion( Immat_avion, vol );
-	        traiterDate_Heure( Annee, Mois, Jour, Heure, Minute, vol );
+	        
+	        HttpSession session = request.getSession();
+	        Map<Long, Aircraft> mapAvions = (Map<Long, Aircraft>) session.getAttribute(ATT_SESSION_AC_LIST);
+	        
+	        Aircraft aircraft = aircraftDao.trouver(mapAvions.get(Long.parseLong(key_avion)).getImmatriculation());
+	        
+	        Vol vol = new Vol();
+	        
+	        traiterDateTime(date, time, vol);
+	        traiterAvion(aircraft, vol);
 	        traiterFlight_Hours( Flight_Hours, vol );
 	        traiterFlight_Cycle( Flight_Cycle, vol );
 	        traiterRemarque( Remarque, vol );
 	        traiterHuile( Huile, vol );
-	        traiterCarburant( Carburant, vol );     
+	        traiterCarburant( Carburant, vol );
 	        
 	        try {
 	            if ( erreurs.isEmpty() ) {
-	                volDAO.creer( vol );
+	                volDao.creer( vol );
 	                resultat = "Succès de la création du vol.";
+	                System.out.println("Pas d'erreurs");
+	                
 	            } else {
 	                resultat = "Echec de la création du vol.";
+	                System.out.println("Erreurs !!!\n\n*******************************************************\n");
+	                for (Entry<String, String> entry : erreurs.entrySet()) {
+	                    System.out.println(entry.getKey() + "=" + entry.getValue());
+	                }
+	                System.out.println();
 	            }
 	        } catch ( DAOException e ) {
 	            setErreur( "imprévu", "Erreur imprévue lors de la création." );
@@ -96,27 +105,33 @@ public class CreationVolForm {
 	        return vol;
 	    }
 	    
-	    private void traiterImmat_avion( String Immat_avion, vol vol ) {
-	    	Long valeurImmat_avion = 0L;
-	    	try {
-	            valeurImmat_avion = validationImmat_avion( Immat_avion );
-	        } catch ( FormValidationException e ) {
-	            setErreur( CHAMP_AVION, e.getMessage() );
-	        }
-	        vol.setAc_id( valeurImmat_avion );  // Récupérer l'ID Avion en fonction de l'immat
+	    private void traiterAvion(Aircraft aircraft, Vol vol) {
+	    	if(aircraft == null) {
+	    		setErreur( CHAMP_AVION, "Aéronef inconnu" );
+	    	}
+	    	vol.setAircraft(aircraft);
 	    }
 	    
-	    private void traiterDate_Heure( String Annee, String Mois, String Jour, String Heure, String Minute, vol vol ) {
-	    	DateTime valeurDate_Heure = null ; 
+	    private void traiterDateTime(String strDate, String strTime, Vol vol) {
+	    	LocalDate date = null;
+	    	LocalTime time = null;
+	    	
 	    	try {
-	    		valeurDate_Heure = validationDate_Heure(  Annee,  Mois,  Jour,  Heure,  Minute );
-	        } 	catch ( FormValidationException e ) {
-	            setErreur( CHAMP_DATEHEURE, e.getMessage() );
+	    		date = validationDate(strDate);
+	    		time = validationTime(strTime);
+	        } catch ( FormValidationException | ParseException e ) {
+	            setErreur( CHAMP_FH, e.getMessage() );
+	            System.out.println(e.getMessage());
 	        }
-	        vol.setDate_heure( valeurDate_Heure);
+	    	DateTime datetime = new DateTime(date.getYear(),
+	    									date.getMonthOfYear(), 
+							    			date.getDayOfMonth(),
+							    			time.getHourOfDay(), 
+							    			time.getMinuteOfHour());
+	        vol.setDate_heure(datetime);
 	    }
-	    
-	    private void traiterFlight_Hours( String Flight_Hours, vol vol ) {
+
+	    private void traiterFlight_Hours( String Flight_Hours, Vol vol ) {
 	    	float valeurFlight_Hours = -1 ; 
 	    	try {
 	            valeurFlight_Hours = validationFlight_Hours( Flight_Hours );
@@ -126,7 +141,7 @@ public class CreationVolForm {
 	        vol.setFH( valeurFlight_Hours);
 	    }
 	    
-	    private void traiterFlight_Cycle( String Flight_Cycle, vol vol ) {
+	    private void traiterFlight_Cycle( String Flight_Cycle, Vol vol ) {
 	        int valeurFlight_Cycle = -1;
 	    	try {
 	            valeurFlight_Cycle = validationFlight_Cycle( Flight_Cycle );
@@ -136,7 +151,7 @@ public class CreationVolForm {
 	        vol.setFC( valeurFlight_Cycle);
 	    }
 	    
-	    private void traiterRemarque( String Remarque, vol vol ) {
+	    private void traiterRemarque( String Remarque, Vol vol ) {
 	        try {
 	            validationRemarque( Remarque );
 	        } catch ( FormValidationException e ) {
@@ -145,7 +160,7 @@ public class CreationVolForm {
 	        vol.setRemarque( Remarque);
 	    }
 	    
-	    private void traiterHuile( String Huile, vol vol ) {
+	    private void traiterHuile( String Huile, Vol vol ) {
 	        int valeurHuile = 0; 
 	    	try {
 	            valeurHuile = validationHuile( Huile );
@@ -155,7 +170,7 @@ public class CreationVolForm {
 	        vol.setHuile( valeurHuile);
 	    }
 	    
-	    private void traiterCarburant( String Carburant, vol vol ) {
+	    private void traiterCarburant( String Carburant, Vol vol ) {
 	        int valeurCarburant = 0;
 	    	try {
 	            valeurCarburant = validationCarburant( Carburant );
@@ -165,10 +180,37 @@ public class CreationVolForm {
 	        vol.setCarburant( valeurCarburant);
 	    }
 	    
-	    private Long validationImmat_avion( String Immat_avion ) throws FormValidationException {
+	    
+	    private LocalDate validationDate(String strDate) throws FormValidationException, ParseException {
 	    	
-	    	  
-	    	aircraft avion = aircraftDAO.trouver(Immat_avion);
+	    	if ( strDate != null ) {
+	    		if(!strDate.matches("^\\s*((?:19|20)\\d{2})\\-(1[012]|0?[1-9])\\-(3[01]|[12][0-9]|0?[1-9])\\s*$")) {
+	    			System.out.println("format date incorrect");
+	    			throw new FormValidationException( "Merci d'entrer une date valide jj/mm/aaaa " );
+	    		} 
+	    	}
+	    	else {
+	    	
+	            throw new FormValidationException( "Merci d'entrer une date valide jj/mm/aaaa " );
+	    	}    
+	    	DateTimeFormatter format = DateTimeFormat.forPattern("yyyy-MM-dd");
+	    	return LocalDate.parse(strDate, format);
+	    }
+	    
+	    private LocalTime validationTime(String strTime) throws FormValidationException {
+	    	if(strTime != null) {
+	    		if(!strTime.matches("^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]?$")){
+	    			throw new FormValidationException( "Merci d'entrer une heure valide");	
+	    		}
+	    	}else {
+	    		throw new FormValidationException( "Merci d'entrer une heure valide");	
+	    	}
+	    	DateTimeFormatter format = DateTimeFormat.forPattern("HH:mm");	
+	    	return LocalTime.parse(strTime,format);
+	    }
+	    
+	    private Aircraft validation_avion( String Immat_avion ) throws FormValidationException {
+	    	Aircraft avion = aircraftDao.trouver(Immat_avion);
 	    	
 	        if ( Immat_avion != null ) {
 	            if ( Immat_avion.length() < 6 && avion==null) {
@@ -180,61 +222,15 @@ public class CreationVolForm {
 	            throw new FormValidationException( "Merci d'entrer l'immatriculation de l'avion." );
 	        }
 	        
-	        return avion.getAc_id(); 
+	        return avion; 
 	    }
 	    
-	    
-	    private DateTime validationDate_Heure( String Annee, String Mois, String Jour, String Heure, String Minute ) throws FormValidationException {
-	      
-	    	int year_tmp;
-	    	int month_tmp;
-	    	int day_tmp;
-	    	int hour_tmp;
-	    	int minute_tmp;
-	    	
-	    	if ( Annee != null && Mois != null && Jour != null && Heure != null && Minute != null) {
-	    		
-	    		
-	            if ( Annee.length() < 4 || Mois.length() < 2 || Jour.length() < 2 || Heure.length() < 2 || Minute.length() < 2 ) {
-	                throw new FormValidationException( "Le format ne correspond pas (JJ/MM/AAAA hh:mm)." );
-	            }
-	            try { 
-		    		year_tmp = Integer.parseInt(Annee); 
-		    		month_tmp = Integer.parseInt(Mois); 
-		    		day_tmp = Integer.parseInt(Jour); 
-		    		hour_tmp = Integer.parseInt(Heure); 
-		    		minute_tmp = Integer.parseInt(Minute); 
-		    	}
-		    	
-		    	catch ( NumberFormatException e ) {
-		    		year_tmp = -1; 
-		    		month_tmp = -1; 
-		    		day_tmp = -1; 
-		    		hour_tmp = -1; 
-		    		minute_tmp = -1; 
-		    		throw new FormValidationException ("Merci d'entrer la date et l'heure de votre vol sous le format suivant : JJ/MM/AAAA hh:mm ");
-		    	}
-		    	
-	        } else {
-	        	year_tmp = -1; 
-	    		month_tmp = -1; 
-	    		day_tmp = -1; 
-	    		hour_tmp = -1; 
-	    		minute_tmp = -1; 
-	            throw new FormValidationException( "Merci d'entrer la date et l'heure de votre vol." );
-	        }
-	    	return new DateTime( year_tmp , month_tmp , day_tmp, hour_tmp, minute_tmp);
-	    		    	
-	    }
-	       
-	       
-
 	    private float validationFlight_Hours( String Flight_Hours ) throws FormValidationException {
 	    	
 	    	float FH_tmp;
 	    	
 	        if ( Flight_Hours != null ) {
-	            if ( Flight_Hours.length() < 2 ) {
+	            if ( Flight_Hours.length() < 1 ) {
 	                throw new FormValidationException( "La durée de votre vol doit contenir au moins 2 caractères." );
 	            }
 	                try { 
@@ -281,7 +277,7 @@ public class CreationVolForm {
 	    private int validationHuile( String Huile) throws FormValidationException {
 	        int Huile_tmp;
 	    	if ( Huile != null ) {
-	            if ( Huile.length() < 2 ) {
+	            if ( Huile.length() < 1 ) {
 	                throw new FormValidationException( "La quantité d'huile ajoutée doit contenir au moins 2 caractères." );
 	            }
 	            try { 
@@ -301,7 +297,7 @@ public class CreationVolForm {
 	    private int validationCarburant( String Carburant ) throws FormValidationException {
 	    	int Carburant_tmp;
 	        if ( Carburant != null ) {
-	            if ( Carburant.length() < 2 ) {
+	            if ( Carburant.length() < 1 ) {
 	                throw new FormValidationException( "La quantité de carburant ajouté doit contenir au moins 2 caractères." );
 	            }
 	            try { 

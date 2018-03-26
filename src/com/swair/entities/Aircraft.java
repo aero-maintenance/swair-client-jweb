@@ -1,61 +1,77 @@
 package com.swair.entities;
 
+import java.io.Serializable;
+import java.sql.Date;
 
 
-import java.util.Date;
-
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 
 @Entity
-public class aircraft {
+@Table(name="aircraft")
+public class Aircraft implements Serializable {
 	
 	@Id
 	@GeneratedValue( strategy = GenerationType.IDENTITY)
 	private Long ac_id;
-	
-	@ManyToOne(targetEntity=utilisateur.class)
+	@ManyToOne
     @JoinColumn( name = "user_id" )
-	
-	private Long user_id;
+	private Utilisateur proprietaire;
+	@Column( name= "constructeur")
+	private String constructeur;
+	@Column( name= "modele" )
 	private String modele;
+	@Column( name= "immatriculation")
 	private String immatriculation;
-	private String manufacturer;
+	@Column( name= "total_FH")
 	private Double total_FH;
+	@Column( name= "total_FC")
 	private Long total_FC;
+	@Column( name= "msn")
 	private Long msn;
+	@Column( name= "statut")
 	private String statut;
-	private Date date_kardex;
+	@Column( name = "date_Kardex")
+	private Date date_Kardex;
+	@Column( name = "remarque")
 	private String remarque;
-	
-	
+		
 	public Long getAc_id() {
 		return ac_id;
 	}
 	public void setAc_id(Long ac_id) {
 		this.ac_id = ac_id;
 	}
-	public Long getUser_id() {
-		return user_id;
+	public String getImmatriculation() {
+		return immatriculation;
 	}
-	public void setUser_id(Long user_id) {
-		this.user_id = user_id;
+	public void setImmatriculation(String immatriculation) {
+		this.immatriculation = immatriculation;
+	}
+	public String getConstructeur() {
+		return constructeur;
+	}
+	public void setConstructeur(String constructeur) {
+		this.constructeur = constructeur;
+	}
+	public Utilisateur getProprietaire() {
+		return proprietaire;
+	}
+	public void setProprietaire(Utilisateur proprietaire) {
+		this.proprietaire = proprietaire;
 	}
 	public String getModele() {
 		return modele;
 	}
 	public void setModele(String modele) {
 		this.modele = modele;
-	}
-	public String getImmatriculation() {
-		return immatriculation;
-	}
-	public void setImmatriculation(String immatriculation) {
-		this.immatriculation = immatriculation;
 	}
 	public Double getTotal_FH() {
 		return total_FH;
@@ -81,23 +97,17 @@ public class aircraft {
 	public void setStatut(String statut) {
 		this.statut = statut;
 	}
-	public Date getDate_kardex() {
-		return date_kardex;
-	}
-	public void setDate_kardex(Date date_kardex) {
-		this.date_kardex = date_kardex;
-	}
 	public String getRemarque() {
 		return remarque;
 	}
 	public void setRemarque(String remarque) {
 		this.remarque = remarque;
 	}
-	public String getManufacturer() {
-		return manufacturer;
+	public Date getDate_Kardex() {
+		return date_Kardex;
 	}
-	public void setManufacturer(String manufacturer) {
-		this.manufacturer = manufacturer;
+	public void setDate_Kardex(Date date_Kardex) {
+		this.date_Kardex = date_Kardex;
 	}
-
+	
 }

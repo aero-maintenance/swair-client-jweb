@@ -10,57 +10,63 @@
 </head>
 <body>
 	<c:import url="/inc/menu.jsp" ></c:import>
-	<form method="post" action="<c:url value="/enregistrementVol" />">
+	<form method="post" action="<c:url value="/account/enregistrementVol" />">
             <fieldset>
                 <legend>Enregistrement d'un vol</legend>
                 <p>Enregistrer vos vols via ce formulaire</p>
                 <c:set var='session' value='${sessionScope}'/>
-                <p>Utilisateur connecter : ${session.sessionUtilisateur.nom_aeroclub}</p>
+                <p>Utilisateur connecté : ${session.sessionUtilisateur.nom_aeroclub}</p>
                 
                 <label for="date">Date <span class="requis">*</span></label>
-                <input type="date" id="date" name="date" value="<c:out value="${vol.date_heure}"/>" size="4" maxlength="2" />
+                <input type="date" id="date" name="date" value="<c:out value=""/>" size="4" maxlength="2" />
                 <span class="erreur">${form.erreurs['date']}</span>
                 <br />
                 
                 <label for="time">heure <span class="requis">*</span></label>
-                <input type="time" id="time" name="time" value="<c:out value="${vol.date_heure}"/>" size="4" maxlength="2" />
-                <span class="erreur">${form.erreurs['heure']}</span>
+                <input type="time" id="time" name="time" value="<c:out value=""/>" size="4" maxlength="2" />
+                <span class="erreur">${form.erreurs['time']}</span>
                 <br />
                 
                 <label for="listAircrafts">Immatriculation <span class="requis">*</span></label>
                 <select name="listAircrafts" id="listAircrafts">
                 	<option value="">immatriculation...</option>
                     <%-- Boucle sur la map des clients --%>
-                    <c:forEach items="${ sessionScope.clients }" var="mapClients">
+                    <c:forEach items="${ sessionScope.sessionAircraftList }" var="mapAircraft">
                     <%--  L'expression EL ${mapClients.value} permet de cibler l'objet Client stocké en tant que valeur dans la Map, 
                     et on cible ensuite simplement ses propriétés nom et prenom comme on le ferait avec n'importe quel bean. --%>
-                    <option value="${ mapClients.key }">${ mapClients.value.email }</option>
+                    <option value="${ mapAircraft.key }">${ mapAircraft.value.immatriculation }</option>
                     </c:forEach>
                 </select>
                 <br />
                                 
-                <label for="FH">FH <span class="requis">*</span></label>
-                <input type="text" id="FH" name="FH" value="<c:out value="${vol.FH}"/>" size="5" maxlength="5" />
+                <label for="Flight_Hours">Heures de vol <span class="requis">*</span></label>
+                <input type="text" id="Flight_Hours" name="Flight_Hours" value="<c:out value=""/>" size="5" maxlength="5" />
                 <!-- <span class="erreur">${form.erreurs['date']}</span> -->
                 <br />
                 
-                <label for="FC">FC <span class="requis">*</span></label>
-                <input type="text" id="FC" name="FC" value="<c:out value="${vol.FC}"/>" size="5" maxlength="5" />
+                <label for="Flight_Cycle">Cycle <span class="requis">*</span></label>
+                <input type="text" id="Flight_Cycle" name="Flight_Cycle" value="<c:out value=""/>" size="5" maxlength="5" />
                 <!-- <span class="erreur">${form.erreurs['date']}</span> -->
                 <br />
                 
                 <label for="huile">Huile <span class="requis">*</span></label>
-                <input type="text" id="huile" name="huile" value="<c:out value="${vol.huile}"/>" size="5" maxlength="5" />
+                <input type="text" id="huile" name="huile" value="<c:out value=""/>" size="5" maxlength="5" />
                 <!-- <span class="erreur">${form.erreurs['date']}</span> -->
                 <br />
                 
                 <label for="carburant">Carburant <span class="requis">*</span></label>
-                <input type="text" id="carburant" name="carburant" value="<c:out value="${vol.carburant}"/>" size="5" maxlength="5" />
+                <input type="text" id="carburant" name="carburant" value="<c:out value=""/>" size="5" maxlength="5" />
                 <!-- <span class="erreur">${form.erreurs['date']}</span> -->
+                <br />
+                
+                <label for="remarques">Remarque</label>
+                <textarea name="remarque" id="remarque"></textarea>
                 <br />
                 <br />
                 <input type="submit" value="Enregistrer" class="sansLabel" />
                 <br />
+                
+                <p class="${empty form.erreurs ? 'succes' : 'erreur'}">${form.resultat}</p>
                 
             </fieldset>
     </form>

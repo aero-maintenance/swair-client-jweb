@@ -10,14 +10,13 @@ import javax.servlet.http.HttpServletRequest;
 import org.jasypt.util.password.ConfigurablePasswordEncryptor;
 
 import com.swair.dao.UtilisateurDAO;
-import com.swair.entities.utilisateur;
+import com.swair.entities.Utilisateur;
 
 public final class ConnexionForm {
     private static final String CHAMP_EMAIL  = "email";
     private static final String CHAMP_PASS   = "password";
     private static final String USER   = "user";
     
-    @EJB
     private UtilisateurDAO utilisateurDAO;
 
     private String              resultat;
@@ -38,10 +37,10 @@ public final class ConnexionForm {
     /**
      * 
      * @param request
-     * @return utilisateur
+     * @return Utilisateur
      * permet de vérifier si l'utilisateur est enregistre dans la base de donnée
      */
-    public utilisateur verifier_utilisateur( HttpServletRequest request ) {
+    public Utilisateur verifier_utilisateur( HttpServletRequest request ) {
     	/* Récupération des champs du formulaire */
         String email = getValeurChamp( request, CHAMP_EMAIL );
         String password = getValeurChamp( request, CHAMP_PASS );
@@ -59,7 +58,7 @@ public final class ConnexionForm {
         } catch ( Exception e ) {
             setErreur( CHAMP_PASS, e.getMessage() );
         }
-       utilisateur user = utilisateurDAO.trouver(email);
+       Utilisateur user = utilisateurDAO.trouver(email);
        try {
     	   validationUser(user,password);
        } catch( Exception e ){
@@ -69,41 +68,8 @@ public final class ConnexionForm {
        
        return user;
     }
-    
-    public utilisateur connecterUtilisateur( HttpServletRequest request ) {
-        /* Récupération des champs du formulaire */
-        String email = getValeurChamp( request, CHAMP_EMAIL );
-        String password = getValeurChamp( request, CHAMP_PASS );
 
-        utilisateur utilisateur = new utilisateur();
-
-        /* Validation du champ email. */
-        try {
-            validationEmail( email );
-        } catch ( Exception e ) {
-            setErreur( CHAMP_EMAIL, e.getMessage() );
-        }
-        utilisateur.setEmail( email );
-
-        /* Validation du champ mot de passe. */
-        try {
-            validationMotDePasse( password );
-        } catch ( Exception e ) {
-            setErreur( CHAMP_PASS, e.getMessage() );
-        }
-        utilisateur.setPassword( password );
-
-        /* Initialisation du résultat global de la validation. */
-        if ( erreurs.isEmpty() ) {
-            resultat = "Succès de la connexion.";
-        } else {
-            resultat = "Échec de la connexion.";
-        }
-
-        return utilisateur;
-    }
-
-    private void validationUser(utilisateur user, String password) throws Exception {
+    private void validationUser(Utilisateur user, String password) throws Exception {
     	ConfigurablePasswordEncryptor passwordEncryptor = new ConfigurablePasswordEncryptor();
         passwordEncryptor.setAlgorithm( "SHA-256" );
         passwordEncryptor.setPlainDigest( false );
@@ -113,8 +79,7 @@ public final class ConnexionForm {
         	}
         }else {
         	throw new Exception( "Les identifiants sont incorrects" );
-        }
-        
+        } 
     }
     	
     
@@ -147,7 +112,7 @@ public final class ConnexionForm {
         erreurs.put( champ, message );
     }
 
-    /*
+    /**
      * Méthode utilitaire qui retourne null si un champ est vide, et son contenu
      * sinon.
      */

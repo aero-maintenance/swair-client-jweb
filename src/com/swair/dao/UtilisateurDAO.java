@@ -9,36 +9,32 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
-import org.jasypt.util.password.ConfigurablePasswordEncryptor;
-
-import com.swair.entities.utilisateur;
+import com.swair.entities.Utilisateur;
 
 @Stateless
-public class UtilisateurDAO {
-	
-	private static final String ALGO_CHIFFREMENT = "SHA-256";
-	private static final String JPQL_SELECT_PAR_EMAIL = "SELECT u FROM utilisateur u WHERE u.email=:email";
+public class UtilisateurDAO {	
+	private static final String JPQL_SELECT_PAR_EMAIL = "SELECT u FROM Utilisateur u WHERE u.email=:email";
     private static final String PARAM_EMAIL           = "email";
 	    
     // Injection du manager, qui s'occupe de la connexion avec la BDD
     @PersistenceContext( unitName = "softwair" )
     private EntityManager em;
 
-    public utilisateur trouver( long id ) throws DAOException {
+    public Utilisateur trouver( long id ) throws DAOException {
         try {
-            return em.find( utilisateur.class, id );
+            return em.find( Utilisateur.class, id );
         } catch ( Exception e ) {
             throw new DAOException( e );
         }
     }
     
     //Recherche d'un utilisateur à partir de son adresse email
-    public utilisateur trouver( String email ) throws DAOException {
-        utilisateur utilisateur = null;
+    public Utilisateur trouver( String email ) throws DAOException {
+        Utilisateur utilisateur = null;
         Query requete = em.createQuery( JPQL_SELECT_PAR_EMAIL );
         requete.setParameter( PARAM_EMAIL, email );
         try {
-            utilisateur = (utilisateur) requete.getSingleResult();
+            utilisateur = (Utilisateur) requete.getSingleResult();
         } catch ( NoResultException e ) {
             return null;
         } catch ( Exception e ) {
@@ -47,7 +43,7 @@ public class UtilisateurDAO {
         return utilisateur;
     }
     
-    public void creer( utilisateur utilisateur ) throws DAOException {
+    public void creer( Utilisateur utilisateur ) throws DAOException {
         try {
             em.persist( utilisateur );
         } catch ( Exception e ) {
@@ -57,16 +53,16 @@ public class UtilisateurDAO {
     
 
 
-    public List<utilisateur> lister() throws DAOException {
+    public List<Utilisateur> lister() throws DAOException {
         try {
-            TypedQuery<utilisateur> query = em.createQuery( "SELECT c FROM utilisateur c ORDER BY c.user_id", utilisateur.class );
+            TypedQuery<Utilisateur> query = em.createQuery( "SELECT c FROM Utilisateur c ORDER BY c.user_id", Utilisateur.class );
             return query.getResultList();
         } catch ( Exception e ) {
             throw new DAOException( e );
         }
     }
 
-    public void supprimer( utilisateur utilisateur ) throws DAOException {
+    public void supprimer( Utilisateur utilisateur ) throws DAOException {
         try {
             em.remove( em.merge( utilisateur ) );
         } catch ( Exception e ) {

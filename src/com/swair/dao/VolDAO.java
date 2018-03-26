@@ -7,7 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import com.swair.entities.vol;
+import com.swair.entities.Vol;
 
 @Stateless
 public class VolDAO {
@@ -16,15 +16,15 @@ public class VolDAO {
     @PersistenceContext( unitName = "softwair" )
     private EntityManager em;
 
-    public vol trouver( long id ) throws DAOException {
+    public Vol trouver( long id ) throws DAOException {
         try {
-            return em.find( vol.class, id );
+            return em.find( Vol.class, id );
         } catch ( Exception e ) {
             throw new DAOException( e );
         }
     }
 
-    public void creer( vol vol ) throws DAOException {
+    public void creer( Vol vol ) throws DAOException {
         try {
             em.persist( vol );
         } catch ( Exception e ) {
@@ -32,16 +32,16 @@ public class VolDAO {
         }
     }
 
-    public List<vol> lister() throws DAOException {
+    public List<Vol> lister() throws DAOException {
         try {
-            TypedQuery<vol> query = em.createQuery( "SELECT c FROM vol c ORDER BY c.id_vol", vol.class );
+            TypedQuery<Vol> query = em.createQuery( "SELECT v FROM Vol v ORDER BY v.flight_id", Vol.class );
             return query.getResultList();
         } catch ( Exception e ) {
             throw new DAOException( e );
         }
     }
 
-    public void supprimer( vol vol ) throws DAOException {
+    public void supprimer( Vol vol ) throws DAOException {
         try {
             em.remove( em.merge( vol ) );
         } catch ( Exception e ) {

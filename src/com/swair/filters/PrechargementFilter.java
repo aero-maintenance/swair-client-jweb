@@ -1,7 +1,7 @@
 package com.swair.filters;
 
 import java.io.IOException;
-import java.util.Date;
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,9 +22,9 @@ import org.jasypt.util.password.ConfigurablePasswordEncryptor;
 import com.swair.dao.AircraftDAO;
 import com.swair.dao.UtilisateurDAO;
 import com.swair.dao.VolDAO;
-import com.swair.entities.aircraft;
-import com.swair.entities.utilisateur;
-import com.swair.entities.vol;
+import com.swair.entities.Aircraft;
+import com.swair.entities.Utilisateur;
+import com.swair.entities.Vol;
 
 @WebFilter( urlPatterns = { "/*" } )
 public class PrechargementFilter implements Filter {
@@ -52,68 +52,63 @@ public class PrechargementFilter implements Filter {
         
         /*ajout d'un utilisateur pour test*/
        
-        ConfigurablePasswordEncryptor passwordEncryptor = new ConfigurablePasswordEncryptor();
+        /*ConfigurablePasswordEncryptor passwordEncryptor = new ConfigurablePasswordEncryptor();
         passwordEncryptor.setAlgorithm( "SHA-256" );
         passwordEncryptor.setPlainDigest( false );
         String motDePasseChiffre = passwordEncryptor.encryptPassword( "test" );
         
         
         utilisateur user = new utilisateur();
-        user.setnom_aeroclub("test");
+        user.setnom_aeroclub("test1");
         user.setAdresse("8 rue du test");
         user.setVille("testville");
         user.setCode_postale("36753");
-        user.setEmail("test@test.com");
+        user.setEmail("test1@test.com");
         user.setTelephone("0642742598");
         user.setPassword(motDePasseChiffre);
         utilisateurDao.creer(user);
-        
-        /*ajout aircraft pour test*/
-        aircraft plane = new aircraft();
-        plane.setUser_id(new Long(2));
-        plane.setManufacturer("Cessna");
-        plane.setModele("172 Cutlass RG");
-        plane.setImmatriculation("F-WDTC");
+        */
+        /* ajout aircraft pour test*/
+       // Utilisateur proprietaire = utilisateurDao.trouver(1);
+       
+        /*Aircraft plane = new Aircraft();
+        plane.setProprietaire(proprietaire);
+        plane.setConstructeur("Beechcraft");
+        plane.setModele("King Air C90");
+        plane.setImmatriculation("F-MOPF");
         plane.setTotal_FH(5284.5);
         plane.setTotal_FC(new Long(8086));
         plane.setMsn(new Long(458));
         plane.setStatut("LSA");
-        plane.setDate_kardex(new Date());
-        plane.setRemarque("RAS just for test");
-        aircraftDao.creer(plane);
+        plane.setDate_Kardex(Date.valueOf("2017-5-13"));
+        plane.setRemarque("RAS just for test1");
+        aircraftDao.creer(plane);*/
         /*
          * Si la map des clients n'existe pas en session, alors l'utilisateur se
          * connecte pour la première fois et nous devons précharger en session
          * les infos contenues dans la BDD.
          */
-        if ( session.getAttribute( ATT_SESSION_CLIENTS ) == null ) {
-            /*
-             * Récupération de la liste des clients existants, et enregistrement
-             * en session
-             */
-            List<utilisateur> listeUtilisateurs = utilisateurDao.lister();
-            Map<Long, utilisateur> mapClients = new HashMap<Long, utilisateur>();
-            for ( utilisateur utilisateur : listeUtilisateurs ) {
+        /*if ( session.getAttribute( ATT_SESSION_CLIENTS ) == null ) {
+            
+            List<Utilisateur> listeUtilisateurs = utilisateurDao.lister();
+            Map<Long, Utilisateur> mapClients = new HashMap<Long, Utilisateur>();
+            for ( Utilisateur utilisateur : listeUtilisateurs ) {
                 mapClients.put( utilisateur.getUser_id(), utilisateur );
             }
             session.setAttribute( ATT_SESSION_CLIENTS, mapClients );
-        }
+        }*/
 
         /*
          * De même pour la map des commandes
          */
-        if ( session.getAttribute( ATT_SESSION_COMMANDES ) == null ) {
-            /*
-             * Récupération de la liste des commandes existantes, et
-             * enregistrement en session
-             */
+       /* if ( session.getAttribute( ATT_SESSION_COMMANDES ) == null ) {
             List<vol> listeVol = volDao.lister();
             Map<Long, vol> mapCommandes = new HashMap<Long, vol>();
             for ( vol vol : listeVol ) {
                 mapCommandes.put( vol.getId_vol(), vol );
             }
             session.setAttribute( ATT_SESSION_COMMANDES, mapCommandes );
-        }
+        }*/
 
         /* Pour terminer, poursuite de la requête en cours */
         chain.doFilter( request, res );

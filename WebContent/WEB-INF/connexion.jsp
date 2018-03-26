@@ -33,7 +33,7 @@
                 <input type="submit" value="Connexion" class="sansLabel" />
                 <br />
                 
-                <p class="${empty form.erreurs ? 'succes' : 'erreur'}">${form.resultat}</p>
+                <p class="${empty volform.erreurs ? 'succes' : 'erreur'}">${volform.resultat}</p>
                 
                 <%-- Vérification de la présence d'un objet utilisateur en session --%>
                 <c:if test="${!empty sessionScope.sessionUtilisateur}">
