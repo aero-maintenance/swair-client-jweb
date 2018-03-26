@@ -1,8 +1,6 @@
 package com.swair.forms;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -28,7 +26,7 @@ public class CreationVolForm {
 		private static final String CHAMP_AVION     	= "listAircrafts";
 	    private static final String CHAMP_FH   			= "Flight_Hours";
 	    private static final String CHAMP_FC			= "Flight_Cycle";
-	    private static final String CHAMP_REMARQUE      = "Remarque";
+	    private static final String CHAMP_REMARQUE      = "remarque";
 	    private static final String CHAMP_HUILE   		= "huile";
 	    private static final String CHAMP_CARBURANT 	= "carburant";
 	    private static final String CHAMP_DATE			= "date";
@@ -84,7 +82,18 @@ public class CreationVolForm {
 	        
 	        try {
 	            if ( erreurs.isEmpty() ) {
-	                volDao.creer( vol );
+	                //volDao.creerVolTransaction(vol, aircraft);
+	            	Long fc = aircraft.getTotal_FC() + vol.getFC();
+	            	Double fh = aircraft.getTotal_FH() + vol.getFH();
+	            	aircraft.setTotal_FC(fc);
+	            	aircraft.setTotal_FH(fh);
+	            	
+	            	/**
+	            	 * Besoin d'une transaction pour creer le vol et update des totaux fh et fc
+	            	 */
+	            	volDao.creer(vol);
+	            	aircraftDao.update(aircraft);
+	            	
 	                resultat = "Succès de la création du vol.";
 	                System.out.println("Pas d'erreurs");
 	                

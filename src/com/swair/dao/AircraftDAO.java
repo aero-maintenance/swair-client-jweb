@@ -23,6 +23,14 @@ public class AircraftDAO {
     // Injection du manager, qui s'occupe de la connexion avec la BDD
     @PersistenceContext( unitName = "softwair" )
     private EntityManager em;
+    
+    public Aircraft update(Aircraft aircraft)throws DAOException {
+    	try {
+    		return em.merge(aircraft);
+    	}catch ( Exception e ){
+    		throw new DAOException( e );
+    	}
+    }
 
     public Aircraft trouver( long id ) throws DAOException {
         try {
